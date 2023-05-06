@@ -33,10 +33,20 @@ class Calculator(ctk.CTk):
             self.label_result.configure(font=('Century Gothic', 26))
             self.label_result.place(x=-10, y=20)
 
+    def decrease_total_font_size(self, total):
+        if len(str(total)) >= 5:
+            self.label_result.configure(font=('Century Gothic', 42))
+            self.label_result.place(x=-10, y=10)
+
+        if len(str(total)) >= 11:
+            self.label_result.configure(font=('Century Gothic', 26))
+            self.label_result.place(x=-10, y=20)
+
     def sum(self):
         try:
             joined_numbers = ''.join(self.__numbers_added)
             eval_numbers = eval(joined_numbers)
+            self.decrease_total_font_size(total=eval_numbers)
             self.label_result.configure(text=eval_numbers)
             self.__numbers_added = [str(eval_numbers)]
         except ZeroDivisionError:
