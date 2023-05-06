@@ -15,6 +15,15 @@ class Calculator(ctk.CTk):
         self.__numbers_added.append(number)
         self.label_result.configure(text=''.join(self.__numbers_added))
 
+    def all_clear_screen(self):
+        self.__numbers_added = []
+        self.label_result.configure(text='')
+
+    def clear_screen(self):
+        if len(self.__numbers_added) > 0:
+            self.__numbers_added.pop()
+            self.label_result.configure(text=''.join(self.__numbers_added))
+
     def decrease_font_size(self):
         if len(self.__numbers_added) >= 5:
             self.label_result.configure(font=('Century Gothic', 42))
@@ -24,9 +33,23 @@ class Calculator(ctk.CTk):
             self.label_result.configure(font=('Century Gothic', 26))
             self.label_result.place(x=-10, y=20)
 
+    def sum(self):
+        try:
+            joined_numbers = ''.join(self.__numbers_added)
+            eval_numbers = eval(joined_numbers)
+            self.label_result.configure(text=eval_numbers)
+            self.__numbers_added = [str(eval_numbers)]
+        except ZeroDivisionError:
+            self.label_result.configure(text='Cannot Divide By Zero', font=('Century Gothic', 22))
+            self.label_result.place(x=-10, y=20)
+        except SyntaxError:
+            self.label_result.configure(text='Leading Zeros in Decimal Integers Literals\n are not Permitted',
+                                        font=('Century Gothic', 14))
+            self.label_result.place(x=-10, y=20)
+
     def main_window(self):
         self.title('Lapple Calculator')
-        self.geometry('300x390')
+        self.geometry('300x380')
         self.resizable(height=False, width=False)
 
     def result_screen(self):
@@ -57,16 +80,18 @@ class Calculator(ctk.CTk):
                       text='AC',
                       font=('Century Gothic', 26),
                       fg_color='#3F4143',
-                      hover_color='#797A7A').grid(row=0, column=0)
+                      hover_color='#797A7A',
+                      command=self.all_clear_screen).grid(row=0, column=0)
 
         ctk.CTkButton(master=self.frame_buttons,
                       height=60,
                       width=75,
                       corner_radius=0,
-                      text='+/-',
+                      text='C',
                       font=('Century Gothic', 26),
                       fg_color='#3F4143',
-                      hover_color='#797A7A').grid(row=0, column=1, padx=1)
+                      hover_color='#797A7A',
+                      command=self.clear_screen).grid(row=0, column=1, padx=1)
 
         ctk.CTkButton(master=self.frame_buttons,
                       height=60,
@@ -84,7 +109,8 @@ class Calculator(ctk.CTk):
                       text='/',
                       font=('Century Gothic', 26),
                       fg_color='#FF9F0C',
-                      hover_color='#B56D02').grid(row=0, column=3, padx=1)
+                      hover_color='#B56D02',
+                      command=lambda: self.add_number_to_screen('/')).grid(row=0, column=3, padx=1)
 
         # Second Row
         ctk.CTkButton(master=self.frame_buttons,
@@ -124,7 +150,8 @@ class Calculator(ctk.CTk):
                       text='x',
                       font=('Century Gothic', 26),
                       fg_color='#FF9F0C',
-                      hover_color='#B56D02').grid(row=1, column=3, padx=1, pady=1)
+                      hover_color='#B56D02',
+                      command=lambda: self.add_number_to_screen('*')).grid(row=1, column=3, padx=1, pady=1)
 
         # Third Row
         ctk.CTkButton(master=self.frame_buttons,
@@ -164,7 +191,8 @@ class Calculator(ctk.CTk):
                       text='-',
                       font=('Century Gothic', 26),
                       fg_color='#FF9F0C',
-                      hover_color='#B56D02').grid(row=2, column=3, padx=1, pady=1)
+                      hover_color='#B56D02',
+                      command=lambda: self.add_number_to_screen('-')).grid(row=2, column=3, padx=1, pady=1)
 
         # Fourth Row
         ctk.CTkButton(master=self.frame_buttons,
@@ -204,7 +232,8 @@ class Calculator(ctk.CTk):
                       text='+',
                       font=('Century Gothic', 26),
                       fg_color='#FF9F0C',
-                      hover_color='#B56D02').grid(row=3, column=3, padx=1, pady=1)
+                      hover_color='#B56D02',
+                      command=lambda: self.add_number_to_screen('+')).grid(row=3, column=3, padx=1, pady=1)
 
         # Fifth Row
         ctk.CTkButton(master=self.frame_buttons,
@@ -232,7 +261,8 @@ class Calculator(ctk.CTk):
                       text='.',
                       font=('Century Gothic', 26),
                       fg_color='#3F4143',
-                      hover_color='#797A7A').grid(row=4, column=2, padx=1, pady=1)
+                      hover_color='#797A7A',
+                      command=lambda: self.add_number_to_screen('.')).grid(row=4, column=2, padx=1, pady=1)
 
         ctk.CTkButton(master=self.frame_buttons,
                       height=60,
@@ -241,7 +271,8 @@ class Calculator(ctk.CTk):
                       text='=',
                       font=('Century Gothic', 26),
                       fg_color='#FF9F0C',
-                      hover_color='#B56D02').grid(row=4, column=3, padx=1, pady=1)
+                      hover_color='#B56D02',
+                      command=self.sum).grid(row=4, column=3, padx=1, pady=1)
 
 
 if __name__ == '__main__':
